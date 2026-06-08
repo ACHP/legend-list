@@ -160,10 +160,26 @@ const ReanimatedPositionViewSticky = typedMemo(function ReanimatedPositionViewSt
         `containerItemKey${id}`,
         "totalSize",
     ]);
-    const pushLimit = React.useMemo(
-        () => getStickyPushLimit(ctx.state, index, itemKey),
-        [ctx.state, index, itemKey, _totalSize],
-    );
+    // const pushLimit = React.useMemo(
+    //     () => getStickyPushLimit(ctx.state, index, itemKey),
+    //     [ctx.state, index, itemKey, _totalSize],
+    // );
+
+    const pushLimit = React.useMemo(() => {
+        const live = ctx.state.indexByKey.get(itemKey);
+        const row = live != null ? ctx.state.props.data[live] : undefined;
+        const r = getStickyPushLimit(ctx.state, index, itemKey);
+        console.log("[push]", {
+            id,                 // container slot
+            propIndex: index,   // index passed to sticky
+            liveIndex: live,    // indexByKey truth
+            type: row?.type,    // "day" or "message"
+            sticky: ctx.state.props.stickyHeaderIndicesArr.includes(live
+              ?? -1),
+            pushLimit: r,
+        });
+        return r;
+    }, [ctx.state, index, itemKey, _totalSize]);
 
     const stickyOffset = stickyHeaderConfig?.offset ?? 0;
     const stickyStart = position + headerSize + stylePaddingTop - stickyOffset;

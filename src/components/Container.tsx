@@ -102,13 +102,14 @@ export const Container = typedMemo(function Container<ItemT>({
     const positionComponentInternal = ctx.state.props.positionComponentInternal;
     const stickyPositionComponentInternal = ctx.state.props.stickyPositionComponentInternal;
 
-    const [column = 0, span = 1, data, numColumns = 1, extraData, isSticky] = useArr$([
+    const [column = 0, span = 1, data, numColumns = 1, extraData, isSticky, liveItemIndex] = useArr$([
         `containerColumn${id}`,
         `containerSpan${id}`,
         `containerItemData${id}`,
         "numColumns",
         "extraData",
         `containerSticky${id}`,
+        `containerItemIndex${id}`,
     ]);
 
     const itemLayoutRef = useRef<{
@@ -165,7 +166,11 @@ export const Container = typedMemo(function Container<ItemT>({
         () => (itemKey !== undefined ? getRenderedItem(itemKey) : null),
         [itemKey, data, extraData],
     );
-    const { index, renderedItem } = renderedItemInfo || {};
+    const { index: memoizedIndex, renderedItem } = renderedItemInfo || {};
+    // Prefer the live index signal so the position/sticky/data-index consumers
+    // never read a stale index when the rendered item itself is memoized
+    // (stable item ref or itemsAreEqual returning true).
+    const index = liveItemIndex ?? memoizedIndex;
 
     const contextValue = useMemo<ContextContainerType>(() => {
         ctx.viewRefs.set(id, ref);

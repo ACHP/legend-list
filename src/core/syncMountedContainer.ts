@@ -23,6 +23,12 @@ export function syncMountedContainer(
     }
     const itemKey = state.idCache[itemIndex] ?? getId(state, itemIndex);
 
+    // Always keep the container's live index in sync, independent of item-data
+    // equality. Otherwise a prepend/MVCP shift that doesn't change the item ref
+    // (or that itemsAreEqual treats as equal) leaves the index stale, which breaks
+    // sticky push math and the web data-index attribute.
+    set$(ctx, `containerItemIndex${containerIndex}`, itemIndex);
+
     const updateLayout = options?.updateLayout ?? true;
     let didChangePosition = false;
     let didRefreshData = false;
