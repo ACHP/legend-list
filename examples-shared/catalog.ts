@@ -16,6 +16,12 @@ export const CURATED_EXAMPLES: ExampleMeta[] = [
         title: "AI Chat",
     },
     {
+        description: "Loads older history 30 at a time on scroll-to-top with sticky date pills.",
+        group: "Messaging",
+        slug: "paginated-chat",
+        title: "Paginated Chat",
+    },
+    {
         description: "Searchable contact list with instant filtering.",
         group: "Directory",
         slug: "directory",

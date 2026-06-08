@@ -311,13 +311,24 @@ function ChatExamplePlayground() {
 
     const { rows, stickyHeaderIndices } = React.useMemo(() => buildRows(messages, isTyping), [messages, isTyping]);
 
-    const updateScrollToLatestVisibility = React.useCallback(() => {
-        const state = listRef.current?.getState?.() as { isAtEnd?: boolean } | undefined;
-        if (state?.isAtEnd === undefined) {
-            return;
-        }
-        setShowScrollToLatest(!state.isAtEnd);
-    }, []);
+  const stableRowsRef = React.useRef<ChatRow[]>([]);
+  const stableRows = React.useMemo(() => {
+    const previousRowsById = new Map(stableRowsRef.current.map((row) => [row.id, row]));
+    const nextRows = rows.map((row) => previousRowsById.get(row.id) ?? row);
+    stableRowsRef.current = nextRows;
+    return nextRows;
+  }, [rows]);
+
+
+
+
+  const updateScrollToLatestVisibility = React.useCallback(() => {
+    const state = listRef.current?.getState?.() as { isAtEnd?: boolean } | undefined;
+    if (state?.isAtEnd === undefined) {
+      return;
+    }
+    setShowScrollToLatest(!state.isAtEnd);
+  }, []);
 
     React.useEffect(() => {
         const raf = requestAnimationFrame(() => updateScrollToLatestVisibility());
@@ -707,10 +718,10 @@ function ChatExampleDefault() {
     );
 }
 
-export function ChatExample({ playground = false }: { playground?: boolean } = {}) {
-    if (playground) {
-        return <ChatExamplePlayground />;
-    }
+export function ChatExample({playground = true}: { playground?: boolean } = {}) {
+  if (playground) {
+    return <ChatExamplePlayground/>;
+  }
 
     return <ChatExampleDefault />;
 }

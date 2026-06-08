@@ -3,6 +3,7 @@ export type CatalogGroup = "Messaging" | "Directory" | "Commerce" | "Media";
 export type ExampleSlug =
     | "chat"
     | "ai-chat"
+    | "paginated-chat"
     | "directory"
     | "sectioned-directory"
     | "product-shelf"
