@@ -70,6 +70,11 @@ export const FIXTURE_SECTIONS: CatalogSection[] = [
                 title: "Fixed Size Items",
             },
             {
+                description: "Reproduces MVCP drift when a header changes height above the viewport.",
+                slug: "header-resize-mvcp-jump",
+                title: "Header Resize MVCP Jump",
+            },
+            {
                 description: "Starts the list at a target index and checks landing accuracy.",
                 slug: "initial-scroll-index",
                 title: "Initial Scroll Index",

@@ -11,6 +11,7 @@ import { SnapWrapper } from "@/components/SnapWrapper";
 import { WebAnchoredEndSpace } from "@/components/WebAnchoredEndSpace";
 import { ENABLE_DEVMODE } from "@/constants";
 import type { ScrollAdjustHandler } from "@/core/ScrollAdjustHandler";
+import { updateHeaderSize } from "@/core/updateHeaderSize";
 import { useStableRenderComponent } from "@/hooks/useStableRenderComponent";
 import { LayoutView } from "@/platform/LayoutView";
 import { Platform } from "@/platform/Platform";
@@ -111,7 +112,7 @@ export const ListComponent = typedMemo(function ListComponent<ItemT>({
     useLayoutEffect(() => {
         // Handle header/footer getting toggled on and off, remove header/footer size when they are not present
         if (!ListHeaderComponent) {
-            set$(ctx, "headerSize", 0);
+            updateHeaderSize(ctx, 0);
         }
         if (!ListFooterComponent) {
             set$(ctx, "footerSize", 0);
@@ -121,7 +122,7 @@ export const ListComponent = typedMemo(function ListComponent<ItemT>({
     const onLayoutHeader = useCallback(
         (rect: LayoutRectangle) => {
             const size = rect[horizontal ? "width" : "height"];
-            set$(ctx, "headerSize", size);
+            updateHeaderSize(ctx, size);
         },
         [ctx, horizontal],
     );
