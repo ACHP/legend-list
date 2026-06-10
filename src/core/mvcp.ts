@@ -11,6 +11,29 @@ const MVCP_POSITION_EPSILON = 0.1;
 const MVCP_ANCHOR_LOCK_TTL_MS = 300;
 const MVCP_ANCHOR_LOCK_QUIET_PASSES_TO_RELEASE = 2;
 const NATIVE_END_CLAMP_EPSILON = 1;
+const END_ANCHOR_EPSILON = 1;
+
+function getDistanceFromEnd(state: StateContext["state"], totalSize: number, scroll = state.scroll) {
+    return totalSize - scroll - state.scrollLength;
+}
+
+function isEffectivelyAtEnd(state: StateContext["state"], totalSize: number) {
+    return getDistanceFromEnd(state, totalSize) <= END_ANCHOR_EPSILON;
+}
+
+function clampEndAnchoredPositionDiff(state: StateContext["state"], totalSize: number, diff: number) {
+    if (diff === 0 || !isEffectivelyAtEnd(state, totalSize)) {
+        return diff;
+    }
+
+    // When pinned to the end, delayed measurement corrections above the anchor can move
+    // the anchor up. Applying that negative diff would only create a gap after the last item.
+    if (diff < 0) {
+        return 0;
+    }
+
+    return Math.max(0, getDistanceFromEnd(state, totalSize));
+}
 
 function resolveAnchorLock(
     state: StateContext["state"],
@@ -101,7 +124,7 @@ function shouldQueueNativeMVCPAdjust(
         return false;
     }
 
-    const distanceFromEnd = prevTotalSize - prevScroll - state.scrollLength;
+    const distanceFromEnd = getDistanceFromEnd(state, prevTotalSize, prevScroll);
     return distanceFromEnd < Math.abs(positionDiff) - MVCP_POSITION_EPSILON;
 }
 
@@ -369,15 +392,11 @@ export function prepareMVCP(ctx: StateContext, dataChanged?: boolean): (() => vo
                     const totalSize = getContentSize(ctx);
                     let diff = newPosition - prevPosition;
 
-                    if (diff !== 0 && isEndAnchoredScrollTarget && state.scroll + state.scrollLength > totalSize) {
+                    if (isEndAnchoredScrollTarget || (anchorLock?.id === targetId && scrollTarget === undefined)) {
                         // If we're scrolling to the end of the list, then there's two potential issues we workaround:
                         // 1. List items above the scroll target may be in view so we don't want to take too much adjusting
                         // 2. Adjusting too much could cause the list to scroll back up
-                        if (diff > 0) {
-                            diff = Math.max(0, totalSize - state.scroll - state.scrollLength);
-                        } else {
-                            diff = 0;
-                        }
+                        diff = clampEndAnchoredPositionDiff(state, totalSize, diff);
                     }
 
                     positionDiff = diff;
