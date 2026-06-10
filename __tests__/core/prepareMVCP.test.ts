@@ -773,6 +773,57 @@ describe("prepareMVCP", () => {
             });
         });
 
+        it("should not lift content when a locked prepend anchor drifts while effectively at the end", () => {
+            withWebPlatform(() => {
+                enableMvcpAnchorLock();
+                mockCtx.values.set("totalSize", 980);
+                mockState.scroll = 499.88;
+                mockState.scrollLength = 500;
+                mockState.props.contentInsetEndAdjustment = 20;
+                mockState.mvcpAnchorLock = {
+                    expiresAt: Date.now() + 500,
+                    id: "item-1",
+                    position: 100,
+                    quietPasses: 0,
+                };
+
+                const adjust = expectAdjustFunction(prepareMVCP(mockCtx));
+
+                setLayoutValue(mockState, "positions", "item-1", 92.38);
+                adjust();
+
+                expect(requestAdjustSpy).not.toHaveBeenCalled();
+                expect(mockState.scroll).toBe(499.88);
+            });
+        });
+
+        it("should maintain visible position when the user scrolls inside the end inset during anchor lock", () => {
+            withWebPlatform(() => {
+                enableMvcpAnchorLock();
+                mockCtx.values.set("totalSize", 980);
+                mockState.scroll = 493;
+                mockState.scrollLength = 500;
+                mockState.props.contentInsetEndAdjustment = 20;
+                mockState.mvcpAnchorLock = {
+                    expiresAt: Date.now() + 500,
+                    id: "item-1",
+                    position: 100,
+                    quietPasses: 0,
+                };
+
+                const adjust = expectAdjustFunction(prepareMVCP(mockCtx));
+
+                setLayoutValue(mockState, "positions", "item-1", 92.38);
+                adjust();
+
+                expect(requestAdjustSpy).toHaveBeenCalledTimes(1);
+                expect(requestAdjustSpy.mock.calls[0][0]).toBe(mockCtx);
+                expect(requestAdjustSpy.mock.calls[0][1]).toBeCloseTo(-7.62);
+                expect(requestAdjustSpy.mock.calls[0][2]).toBeUndefined();
+                expect(mockState.scroll).toBeCloseTo(485.38);
+            });
+        });
+
         it("should release locked prepend anchor after quiet passes", () => {
             withWebPlatform(() => {
                 enableMvcpAnchorLock();
