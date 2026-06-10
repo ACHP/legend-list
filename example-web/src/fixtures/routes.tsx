@@ -14,6 +14,7 @@ import CountriesExample from "./CountriesExample";
 import CountriesWithHeadersStickyExample from "./CountriesWithHeadersStickyExample";
 import ExtraDataExample from "./ExtraDataExample";
 import FixedSizeItemsExample from "./FixedSizeItemsExample";
+import HeaderResizeMvcpJumpExample from "./HeaderResizeMvcpJumpExample";
 import InitialScrollAtEndExample from "./InitialScrollAtEndExample";
 import InitialScrollIndexExample from "./InitialScrollIndexExample";
 import LazyListExample from "./LazyListExample";
@@ -102,6 +103,13 @@ export const FIXTURE_ROUTES: FixtureRoute[] = [
         group: "Scroll & Position",
         path: "fixed-size-items",
         title: "Fixed Size Items",
+    },
+    {
+        description: "Repro: a header height change above the viewport breaks MVCP compensation.",
+        element: () => <HeaderResizeMvcpJumpExample />,
+        group: "Scroll & Position",
+        path: "header-resize-mvcp-jump",
+        title: "Header Resize MVCP Jump",
     },
     {
         description: "Starts the list at a target index and checks landing accuracy.",
