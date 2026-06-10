@@ -18,35 +18,27 @@ import { LegendList, type LegendListRef } from "@legendapp/list/react";
  * should stay put when older items are prepended.
  * Bug: the scroll position is NOT maintained on that prepend.
  */
-const ITEM_HEIGHTS = [
-    { height: 48.09027862548828, index: 0, width: 818.3333740234375 },
-    { height: 45.659725189208984, index: 1, width: 818.3333740234375 },
-    { height: 37.65625, index: 2, width: 818.3333740234375 },
-    { height: 37.65625, index: 3, width: 818.3333740234375 },
-    { height: 37.65625, index: 4, width: 818.3333740234375 },
-    { height: 37.65625, index: 5, width: 818.3333740234375 },
-    { height: 37.65625, index: 6, width: 818.3333740234375 },
-    { height: 37.65625, index: 7, width: 818.3333740234375 },
-    { height: 37.65625, index: 8, width: 818.3333740234375 },
-    { height: 37.65625, index: 9, width: 818.3333740234375 },
-    { height: 37.65625, index: 10, width: 818.3333740234375 },
-    { height: 37.65625, index: 11, width: 818.3333740234375 },
-    { height: 425.9895935058594, index: 12, width: 818.3333740234375 },
-    { height: 68.54167175292969, index: 13, width: 818.3333740234375 },
-    { height: 37.65625, index: 14, width: 818.3333740234375 },
-    { height: 48.09027862548828, index: 15, width: 818.3333740234375 },
-    { height: 434.8871765136719, index: 16, width: 818.3333740234375 },
-    { height: 48.09027862548828, index: 17, width: 818.3333740234375 },
-    { height: 68.54167175292969, index: 18, width: 818.3333740234375 },
-    { height: 37.65625, index: 19, width: 818.3333740234375 },
-].map((it) => it.height);
 
-const LIST_RECT = {
-    height: 817.9166870117188,
-    width: 1218.3333740234375,
-    x: 460.5555725097656,
-    y: 49.548614501953125,
-};
+const ITEM_HEIGHTS = [
+  212, 88, 212, 204, 204, 66, 235, 212, 204, 204, 204, 212, 204, 212, 204, 204,
+  204, 204, 204, 212, 204, 204, 204, 226, 235, 235, 204,
+];
+
+// Exact geometry of the conversation message list.
+const LIST_RECT = { x: 461, y: 50, width: 600, height: 600 };
+
+// How many of the newest items are shown on first open.
+const INITIAL_COUNT = 12;
+// How many older items each "load older" pulls in.
+const PAGE_SIZE = 8;
+const AUTO_INTERVAL_MS = 1500;
+
+// const LIST_RECT = {
+//     height: 817.9166870117188,
+//     width: 1218.3333740234375,
+//     x: 460.5555725097656,
+//     y: 49.548614501953125,
+// };
 
 interface Item {
     id: string;
@@ -60,17 +52,13 @@ const DATA: Array<Item> = ITEM_HEIGHTS.map((height, index) => ({
     index,
 }));
 
-// We first show only the last N items (the "last page"), then prepend the
-// older ones — mirroring how the app opens at the end and then loads older
-// messages. The bug appears on that prepend (MVCP re-anchoring).
-const INITIAL_COUNT = 13;
-const INITIAL_LAST_INDEX = INITIAL_COUNT - 1;
 
 export default function PrependMvcpJumpExample() {
     const listRef = useRef<LegendListRef>(null);
     // Remounting re-triggers the initial open; showAll prepends the older items.
     const [mountKey, setMountKey] = useState(0);
     const [showAll, setShowAll] = useState(false);
+    const initialIndexRef = useRef(INITIAL_COUNT - 1);
 
     // Mirror the app workaround: items get fresh refs so LegendList re-renders.
     // https://github.com/LegendApp/legend-list/issues/455
@@ -116,11 +104,13 @@ export default function PrependMvcpJumpExample() {
                 <LegendList<Item>
                     className="min-h-0 flex-1"
                     data={visibleData}
-                    initialScrollIndex={{ index: INITIAL_LAST_INDEX, viewPosition: 0 }}
+                    initialScrollIndex={{ index: initialIndexRef.current, viewPosition: 0 }}
                     itemsAreEqual={(itA, itB) => itA.id === itB.id}
                     key={mountKey}
+                    // drawDistance={2000}
+                    // contentInsetEndAdjustment={20}
                     keyExtractor={(item) => item.id}
-                    maintainScrollAtEndThreshold={1}
+                    // maintainScrollAtEndThreshold={1}
                     maintainVisibleContentPosition
                     recycleItems
                     ref={listRef}
