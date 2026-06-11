@@ -6,56 +6,56 @@
     "private": false,
     "exports": {
         "./animated": {
-            "types": "./animated.d.ts",
-            "import": "./animated.mjs",
-            "require": "./animated.js",
-            "default": "./animated.js"
+            "types": "./dist/animated.d.ts",
+            "import": "./dist/animated.mjs",
+            "require": "./dist/animated.js",
+            "default": "./dist/animated.js"
         },
         "./keyboard": {
-            "types": "./keyboard.d.ts",
-            "import": "./keyboard.mjs",
-            "require": "./keyboard.js",
-            "default": "./keyboard.js"
+            "types": "./dist/keyboard.d.ts",
+            "import": "./dist/keyboard.mjs",
+            "require": "./dist/keyboard.js",
+            "default": "./dist/keyboard.js"
         },
         "./keyboard-legacy": {
-            "types": "./keyboard-legacy.d.ts",
-            "import": "./keyboard-legacy.mjs",
-            "require": "./keyboard-legacy.js",
-            "default": "./keyboard-legacy.js"
+            "types": "./dist/keyboard-legacy.d.ts",
+            "import": "./dist/keyboard-legacy.mjs",
+            "require": "./dist/keyboard-legacy.js",
+            "default": "./dist/keyboard-legacy.js"
         },
         "./reanimated": {
-            "types": "./reanimated.d.ts",
-            "import": "./reanimated.mjs",
-            "require": "./reanimated.js",
-            "default": "./reanimated.js"
+            "types": "./dist/reanimated.d.ts",
+            "import": "./dist/reanimated.mjs",
+            "require": "./dist/reanimated.js",
+            "default": "./dist/reanimated.js"
         },
         "./react-native": {
-            "types": "./react-native.d.ts",
+            "types": "./dist/react-native.d.ts",
             "browser": {
-                "import": "./react-native.web.mjs",
-                "require": "./react-native.web.js",
-                "default": "./react-native.web.js"
+                "import": "./dist/react-native.web.mjs",
+                "require": "./dist/react-native.web.js",
+                "default": "./dist/react-native.web.js"
             },
             "react-native": {
-                "import": "./react-native.mjs",
-                "require": "./react-native.js",
-                "default": "./react-native.js"
+                "import": "./dist/react-native.mjs",
+                "require": "./dist/react-native.js",
+                "default": "./dist/react-native.js"
             },
-            "import": "./react-native.web.mjs",
-            "require": "./react-native.web.js",
-            "default": "./react-native.web.js"
+            "import": "./dist/react-native.web.mjs",
+            "require": "./dist/react-native.web.js",
+            "default": "./dist/react-native.web.js"
         },
         "./section-list": {
-            "types": "./section-list.d.ts",
-            "import": "./section-list.mjs",
-            "require": "./section-list.js",
-            "default": "./section-list.js"
+            "types": "./dist/section-list.d.ts",
+            "import": "./dist/section-list.mjs",
+            "require": "./dist/section-list.js",
+            "default": "./dist/section-list.js"
         },
         "./react": {
-            "types": "./react.d.ts",
-            "import": "./react.mjs",
-            "require": "./react.js",
-            "default": "./react.js"
+            "types": "./dist/react.d.ts",
+            "import": "./dist/react.mjs",
+            "require": "./dist/react.js",
+            "default": "./dist/react.js"
         }
     },
     "files": [
