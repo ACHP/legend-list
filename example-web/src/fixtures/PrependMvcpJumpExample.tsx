@@ -20,18 +20,18 @@ import { LegendList, type LegendListRef } from "@legendapp/list/react";
  */
 
 const ITEM_HEIGHTS = [
-  212, 88, 212, 204, 204, 66, 235, 212, 204, 204, 204, 212, 204, 212, 204, 204,
-  204, 204, 204, 212, 204, 204, 204, 226, 235, 235, 204,
+    212, 88, 212, 204, 204, 66, 235, 212, 204, 204, 204, 212, 204, 212, 204, 204, 204, 204, 204, 212, 204, 204, 204,
+    226, 235, 235, 204,
 ];
 
 // Exact geometry of the conversation message list.
-const LIST_RECT = { x: 461, y: 50, width: 600, height: 600 };
+const LIST_RECT = { height: 600, width: 600, x: 461, y: 50 };
 
 // How many of the newest items are shown on first open.
 const INITIAL_COUNT = 12;
 // How many older items each "load older" pulls in.
-const PAGE_SIZE = 8;
-const AUTO_INTERVAL_MS = 1500;
+const _PAGE_SIZE = 8;
+const _AUTO_INTERVAL_MS = 1500;
 
 // const LIST_RECT = {
 //     height: 817.9166870117188,
@@ -51,7 +51,6 @@ const DATA: Array<Item> = ITEM_HEIGHTS.map((height, index) => ({
     id: `item-${index}`,
     index,
 }));
-
 
 export default function PrependMvcpJumpExample() {
     const listRef = useRef<LegendListRef>(null);
@@ -74,8 +73,22 @@ export default function PrependMvcpJumpExample() {
 
     return (
         <div style={{ background: "#ddd", flex: 1, minHeight: 0, position: "relative" }}>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8, left: 12, position: "absolute", top: 12, zIndex: 10 }}>
-                <button onClick={remount} style={{ background: "#333", borderRadius: 6, color: "white", padding: 10 }} type="button">
+            <div
+                style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: 8,
+                    left: 12,
+                    position: "absolute",
+                    top: 12,
+                    zIndex: 10,
+                }}
+            >
+                <button
+                    onClick={remount}
+                    style={{ background: "#333", borderRadius: 6, color: "white", padding: 10 }}
+                    type="button"
+                >
                     Remount ({INITIAL_COUNT} last only)
                 </button>
                 <button
